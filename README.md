@@ -19,12 +19,12 @@ Develop NLP models that assist early screening of language disorders
 ## Table of Contents
 
 -   [Dependencies](#dependencies)
--   [Data cleaning and preprocessing pipeline](#Data cleaning and preprocessing pipeline)
--   [Embeddings + Initial Features](#Embeddings + Initial Features)
--   [Baseline model training](#Baseline model training)
+-   [Data cleaning and preprocessing pipeline](#Data-cleaning-and-preprocessing-pipeline)
+-   [Embeddings + Initial Features](#Embeddings+Initial-Features)
+-   [Baseline model training](#Baseline-model-training)
 -   [Baseline-Results](#Baseline-Results)
 -   [Transformer](#Transformer)
--   [Performance Comparisons](#Performance Comparisons)
+-   [Performance Comparisons](#Performance-Comparisons)
 -   [References](#references)
 
 
@@ -35,13 +35,13 @@ Develop NLP models that assist early screening of language disorders
 * numpy
 *
 
-## Data cleaning and preprocessing pipeline
+## Data-cleaning-and-preprocessing-pipeline
 
 ### Dataset
 SCLARIN TalkBank / CHILDES conversational transcripts
 
 
-## Embeddings + Initial Features
+## Embeddings+Initial-Features
 
 ### Embeddings:
 ```bash
@@ -55,7 +55,7 @@ python IFeature.py
 ```
 (Note: )
 
-## Baseline model training
+## Baseline-model-training
 
 ### Majority class
 ```bash
@@ -87,7 +87,7 @@ python transformerT.py
 ```
 (Note: )
 
-## Performance Comparisons
+## Performance-Comparisons
 
 ### Results
 
