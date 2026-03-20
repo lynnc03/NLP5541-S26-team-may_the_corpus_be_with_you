@@ -12,7 +12,7 @@
 ## Problem Definition
 Speech language disorders, including specific language impairment (SLI)/developmental language disorder (DLD), diagnosis relies heavily on manual analysis of conversational language samples by speech-language pathologists. Time-intensive and subjective diagnosis underscores the need for automated screening.
 
-##Goal: 
+## Goal: 
 Develop NLP models that assist early screening of language disorders
 
 
