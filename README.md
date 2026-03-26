@@ -41,9 +41,7 @@ Develop NLP models that assist early screening of language disorders
 ### Dataset
 SCLARIN TalkBank / CHILDES conversational transcripts
 
-##See README.md.txt file for now to detail preprocessing pipeline. 
-
-Initial preprocessing pipeline output is located here, and not on GitHub due to size constraints:
+Initial preprocessing pipeline output is located on google drive, not on GitHub due to size constraints:
 
 https://drive.google.com/drive/u/1/folders/1gi70tvEbzI7_IevzK3NQrI6mrYAdFrxi
 
