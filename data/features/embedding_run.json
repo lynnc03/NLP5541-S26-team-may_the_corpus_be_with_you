@@ -1,0 +1,12 @@
+{
+  "utterances_csv": "C:\\Users\\user\\Downloads\\NLP5541-S26-team-may_the_corpus_be_with_you-main\\NLP5541-S26-team-may_the_corpus_be_with_you-main\\data\\processed\\child_utterances.csv",
+  "text_column": "utterance_clean",
+  "n_sessions_train": 1983,
+  "n_sessions_val": 425,
+  "n_sessions_test": 425,
+  "vocabulary_size": 50000,
+  "test_size": 0.15,
+  "val_size": 0.15,
+  "random_seed": 42,
+  "vectorizer_path": "tfidf_vectorizer.joblib"
+}
