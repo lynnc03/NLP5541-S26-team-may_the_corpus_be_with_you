@@ -1,0 +1,24 @@
+[
+  {
+    "experiment": "utterance_clean",
+    "f1": 0.7329192546583851,
+    "precision": 0.7065868263473054,
+    "recall": 0.7612903225806451,
+    "roc_auc": 0.841720430107527,
+    "n_train": 1983,
+    "n_val": 425,
+    "n_test": 425,
+    "seed": 42
+  },
+  {
+    "experiment": "utterance_disfluency_tagged",
+    "f1": 0.08641975308641975,
+    "precision": 1.0,
+    "recall": 0.04516129032258064,
+    "roc_auc": 0.8035125448028673,
+    "n_train": 1983,
+    "n_val": 425,
+    "n_test": 425,
+    "seed": 42
+  }
+]
