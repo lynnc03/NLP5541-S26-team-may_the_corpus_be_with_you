@@ -1,21 +1,16 @@
-# This script will simply predict the majority class given the model and test
-# data as a method of baseline comparison. For now, prints predictions to
-# screen.
-from sklearn.model_selection import train_test_split
-from sklearn.dummy import DummyClassifier
-# Using the breast cancer dataset as a toy dataset for now
-from sklearn.datasets import load_breast_cancer
+from src.models.majority_classifier import train_majority_classifier
+from sklearn.metrics import accuracy_score, classification_report
+from scipy.sparse import load_npz
+import numpy as np
 
-# Load toy data
-toy_data = load_breast_cancer()
-X, y = toy_data.data, toy_data.target
+# Load X and y data
+X_train = load_npz("data/features/X_train_tfidf.npz")
+X_test = load_npz("data/features/X_test_tfidf.npz")
+y_train = np.load("data/features/y_train.npy")
+y_test = np.load("data/features/y_test.npy")
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, 
-                                                    random_state=42)
+# "Train"
+model = train_majority_classifier(X_train, y_train)
 
-# "Train" the majority class model
-dummy = DummyClassifier(strategy="most_frequent")
-dummy.fit(X_train, y_train)
-
-predictions = dummy.predict(X_test)
-print(predictions)
+predictions = model.predict(X_test)
+print(classification_report(y_test, predictions, zero_division=0))
