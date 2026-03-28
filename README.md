@@ -139,19 +139,12 @@ python src/models/LogisticR.py
 ### Logistic-Regression
 
 
-| Precision | Recall | f1-score | Support |
-|-----------|--------|----------|---------|
+|               |Precision | Recall | f1-score | Support |
+|---------------|-----------|--------|----------|---------|
 | 0 |  0.82 | 0.94 | 0.88 | 271 |
 | 1 |  0.85 | 0.65 | 0.74 | 155 |
 
 
-### Evaluation
-| Precision | Recall | f1-score | Support |
-|-----------|--------|----------|---------|
-| Accuracy |   |  | 0.83 | 426 |
-| Macro avg |  0.84 | 0.79 | 0.81 | 426 |
-| Weighted avg |  0.83 | 0.83 | 0.82 | 426 |
-| ROC AUC |  0.88 |  |  |  |
 
 ## Transformer
 
