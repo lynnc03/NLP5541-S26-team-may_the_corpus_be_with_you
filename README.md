@@ -136,7 +136,7 @@ python src/models/LogisticR.py
 
 ## Baseline-Results
 
-### Results-Baseline-Logistic-Regression
+### Logistic-Regression
 
 
 | Precision | Recall | f1-score | Support |
