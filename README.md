@@ -135,6 +135,11 @@ python src/models/LogisticR.py
 ```
 
 ## Baseline-Results
+### Majority Classifier
+|               |Precision | Recall | f1-score | Support |
+|---------------|-----------|--------|----------|---------|
+| 0 |  0.64 | 1.0 | 0.78 | 270 |
+| 1 |  0 | 0 | 0 | 155 |
 
 ### Logistic-Regression
 
