@@ -157,7 +157,7 @@ python src/models/LogisticR.py
 ```bash
 python transformerB.py
 ```
-(Note:)
+(Note: may compare performance on pretrained model vs. from scratch)
 
 ### Transformer training:
 ```bash
