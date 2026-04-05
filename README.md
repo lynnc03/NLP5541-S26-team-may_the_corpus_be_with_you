@@ -81,16 +81,14 @@ project_root/
 Notes: data/features/split_manifest.csv contains a data split that does not separate participants by PID across train/val/test sets, instead using splits from session ID. This creates data leakage due to some participnats having multiple sessions. Instead, split_manifest_by_pid.csv (root directory) is the corrected split used for the transformer, which ensures no child appears in more than one split.
 TODO: Duplicate files: Several files appear in both the root directory and src/ (e.g., majorityC.py and src/models/majority_classifier.py). Please update README + structure to specify which one is current version.
 
-## Dependencies / Installation
+## Dependencies/Installation
 
 ```bash
 pip install -r requirements.txt
 ```
 Key dependencies: pylangacq, pandas, transformers, torch, numpy, scikit-learn
 
-## Data-cleaning-and-preprocessing-pipeline
-
-### Data
+## Data
 
 Source: SCLARIN TalkBank / CHILDES conversational transcripts (.cha format)
 
@@ -159,6 +157,38 @@ I advise testing the parser on a single file at first. To do so, run:
 python preprocessing/parse_data.py path/to/file.cha
 ```
 
+### Output files:
+
+All outputs are written to data/processed/:
+
+	1. child_utterances.csv
+	
+		One row per child utterance. Includes raw text, cleaned text variants, all CHAT feature counts (pauses, disfluencies, errors, etc.), morphological annotations, and metadata (age, sex, label).
+
+	2. all_utterances.csv
+		Same as above but includes all speakers — parents, examiners, siblings. 
+		
+	3. child_context_windows.csv
+		Child utterances with surrounding context. 
+		
+	4. session_level.csv
+		One row per recording session. CHAT features summed/averaged across child utterances.
+		
+	5. pipeline_warnings.csv
+		Flags cases where age or sex in the file header doesn't match files_master.csv. Not data, used only for quality checking.
+
+### Pipeline settings
+Adjust context window settings at the top of create_datasets.py:
+```python
+CONTEXT_WINDOW_BEFORE = 2
+CONTEXT_WINDOW_AFTER  = 1
+```
+
+Files that aren't parsed successfully are skipped without crashing the pipeline and logged to data/processed/failed_files.txt.
+
+## Step 2: Features and Embeddings
+
+## Step 3: Baseline Models
 
 
 OLD VERSION:
