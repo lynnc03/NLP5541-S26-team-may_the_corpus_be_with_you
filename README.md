@@ -47,29 +47,28 @@ https://drive.google.com/drive/u/1/folders/1gi70tvEbzI7_IevzK3NQrI6mrYAdFrxi
 
 Further Preprocessing Notes: 
 
-#### NOTE: this is only for v1. V1 includes only controls and children marked SLI/language_disorders. (Some just said "language_disorder" which was unspecified. This was a small number. We can remove if needed)
+ 1. V1 includes only controls and children marked SLI/language_disorders. (Some just said "language_disorder" which was unspecified. This was a small number. We can remove if needed)
 
 
 ### Requirements.txt
 
-	Run pip install -r requirements.txt to install required packages
+Run pip install -r requirements.txt to install required packages
 
 ### Creating initial data files
 
-Run the following code: 
+Run the following code for step 1:
+
+```bash
+python create_master_csv.py
+```
 
 ```bash
 python create_datasets.py
 ```
 
-Relevant files:
+### Related files:
 
-src/preprocessing/
-    create_datasets.py   --  runs everything else - our main entry point
-    parse_data.py        -- parses .cha files
-    clean_text.py        --  cleans utterances
-    data_classes.py      -- defines ParsedSpeech, Utterance, etc.
-	create_master_csv.py -- creates 
+
 
 ### Data files:
 
