@@ -18,42 +18,151 @@ Develop NLP models that assist early screening of language disorders
 
 
 ## Table of Contents
+- [Repository Structure](#repository-structure)
+- [Dependencies/Installation](#dependencies)
+- [Data](#data)
+- [Step 1: Preprocessing Pipeline](#step-1-preprocessing-pipeline)
+- [Step 2: Features and Embeddings](#step-2-features-and-embeddings)
+- [Step 3: Baseline Models](#step-3-baseline-models)
+- [Step 4: Transformer Model](#step-4-transformer-model)
+- [Results](#results)
+- [References](#references)
 
--   [Dependencies](#dependencies)
--   [Data cleaning and preprocessing pipeline](#Data-cleaning-and-preprocessing-pipeline)
--   [Embeddings + Initial Features](#Embeddings+Initial-Features)
--   [Baseline model training](#Baseline-model-training)
--   [Baseline-Results](#Baseline-Results)
--   [Transformer](#Transformer)
--   [Performance Comparisons](#Performance-Comparisons)
--   [References](#references)
 
+## Repository Structure
+```plaintext
+project_root/
+│
+├── data/
+│   ├── features/                         #Initial features and train/test split ****NOTE: redo due to leakage.
+│   │   ├── X_train_tfidf.npz
+│   │   ├── X_val_tfidf.npz
+│   │   ├── X_test_tfidf.npz
+│   │   ├── y_train.npy / y_val.npy / y_test.npy
+│   │   ├── tfidf_vectorizer.joblib
+│   │   ├── split_manifest.csv            #Initial train/val/test split ***NOTE: Redo due to leakage. Don't use, use later split manifest
+│   │   └── embedding_run.json
+│   └── transformer_experiments/          #Tokenization experiment outputs **NOTE: Redo due to stratificaiton leakage
+│
+├── file_info/
+│   └── files_master.csv                  #Master registry of all .cha files (manually annotated)
+│
+├── notebooks/
+│   └── nlp_project_exploration.ipynb     #Initial .cha file exploration (not formal EDA)
+│
+├── preprocessing/                        #Core preprocessing pipeline
+│   ├── create_master_csv.py              #Step 1a: Scans corpus dirs, generate file registry
+│   ├── parse_data.py                     #Step 1b: Parse .cha files - ParsedSpeech objects
+│   ├── data_classes.py                   #Dataclasses: ParsedSpeech, Utterance, Metadata, etc.
+│   ├── clean_text.py                     #Step 1c: CHAT notation - clean/surface/tagged text
+│   └── create_datasets.py                #Step 1d: Orchestrate pipeline, write output CSVs
+│
+├── src/
+│   ├── features/
+│   │   ├── tfidf_pipeline.py             #TF-IDF feature extraction pipeline **REDO due to leakage??
+│   │   └── transformer_tokenization_ex.. #Tokenization experiments **REDO due to leakage?
+│   └── models/
+│       └── majority_classifier.py        #Majority class baseline **REDO?
+│
+├── LogisticR.py                          #Logistic regression baseline
+├── embedding.py                          #TF-IDF embedding pipeline
+├── majorityC.py                          #Majority class baseline
+├── tokenization.py                       #TODO: if you made this, fill in info
+├── split_manifest_by_pid.csv             #Corrected train/val/test split by participant ID 
+│                                         #   — use this for the transformer, not split_manifest.csv
+├── transformerB.py                       #Transformer model definition
+├── transformerT.py                       #Transformer training script
+├── load_data.py                          #Data loader for transformer pipeline
+├── split_by_pid.py                       #Generates split_manifest_by_pid.csv
+├── requirements.txt
+└── README.md
+```
 
-## Dependencies
+Notes: data/features/split_manifest.csv contains a data split that does not separate participants by PID across train/val/test sets, instead using splits from session ID. This creates data leakage due to some participnats having multiple sessions. Instead, split_manifest_by_pid.csv (root directory) is the corrected split used for the transformer, which ensures no child appears in more than one split.
+TODO: Duplicate files: Several files appear in both the root directory and src/ (e.g., majorityC.py and src/models/majority_classifier.py). Please update README + structure to specify which one is current version.
 
-* transformers
-* torch
-* numpy
-*
+## Dependencies / Installation
+
+```bash
+pip install -r requirements.txt
+```
+Key dependencies: pylangacq, pandas, transformers, torch, numpy, scikit-learn
 
 ## Data-cleaning-and-preprocessing-pipeline
 
-### Dataset
-SCLARIN TalkBank / CHILDES conversational transcripts
+### Data
 
-Initial preprocessing pipeline output is located on google drive, not on GitHub due to size constraints:
+Source: SCLARIN TalkBank / CHILDES conversational transcripts (.cha format)
 
+Processed data files are too large for GitHub and are available on Google Drive:
 https://drive.google.com/drive/u/1/folders/1gi70tvEbzI7_IevzK3NQrI6mrYAdFrxi
 
-Further Preprocessing Notes: 
+Raw .cha files can be downloaded from https://talkbank.org/childes/access/Clinical-Eng/ and should be placed in data/raw/ before running the preprocessing pipeline. Specific files used are described in /file_info/files_master.csv
 
- 1. V1 includes only controls and children marked SLI/language_disorders. (Some just said "language_disorder" which was unspecified. This was a small number. We can remove if needed)
+Labeling: 
+
+label_binary = 0 — typically developing control
+label_binary = 1 — SLI or language disorder
+
+V1 includes only controls and children marked SLI or language disorder. Other diagnoses (Down syndrome, hearing loss, late talker, etc.) are excluded from V1 but can be added easily in future versions.
+
+## Step 1: Preprocessing Pipeline
+
+All scripts are in the preprocessing/ directory. 
+
+### How the scripts work:
+
+data_classes.py contains the core data structures used throughout the pipeline: ParsedSpeech, Metadata, Utterance, CHATFeatures, and Annotations.
+create_master_csv.py traverses your corpus directories, finds all .cha files, and extracts metadata (file path, age, sex) from each file's @ID header. It writes file_info/files_master.csv, which were then manually annotated with. Manual annotation avoids errors with varying @ID header formatting, and errors due to differences in file availability over time. Manual labeling also helps deal with ambiguous or incomplete headers and labels.
+
+	label: diagnostic category (e.g., "SLI", "control")
+	label_binary: binary label (1/0)
+	include_v1: whether to include in the current dataset (1/0)
+	has_audio: whether paired audio exists
+
+parse_data.py (CHAFileParser) parses each .cha file using pylangacq. It extracts utterances, CHAT notation features (pauses, disfluencies, errors, unintelligible speech, and so on), and speaker metadata.. It also attaches context windows before and after each child utterance.
+
+clean_text.py (TextCleaner) takes raw CHAT-annotated text and produces three cleaned versions per utterance:
+
+	text_clean: CHAT notation stripped, target forms substituted in place of errors
+	text_surface: what the child actually said (surface forms preserved, not corrected)
+	text_disfluency_tagged: disfluencies replaced with explicit tokens, such as [PAUSE], [REPEAT], [ERROR]
+
+create_datasets.py orchestrates the full pipeline: reads files_master.csv, filters to include_v1 == 1, runs each file through the parser and cleaner, and writes four output CSVs.
+
+### Running the initial preprocessing pipeline:
+
+Step 1a. Generate master csv file:
+
+```bash
+python preprocessing/create_master_csv.py
+```
+Then manually fill in label, label_binary, include_v1, and has_audio in file_info/files_master.csv.
+
+Step 1b. Run the full pipeline:
+
+```bash
+python preprocessing/create_datasets.py
+```
+
+Optional arguments:
+```bash
+python preprocessing/create_datasets.py \
+  --registry file_info/files_master.csv \
+  --raw_root data/raw/ \
+  --output data/processed/
+```
+
+I advise testing the parser on a single file at first. To do so, run:
+
+```bash
+python preprocessing/parse_data.py path/to/file.cha
+```
 
 
-### Requirements.txt
 
-Run pip install -r requirements.txt to install required packages
-
+OLD VERSION:
+-----
 ### Creating initial data files
 
 Run the following code for step 1:
