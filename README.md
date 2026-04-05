@@ -54,6 +54,23 @@ Further Preprocessing Notes:
 
 	Run pip install -r requirements.txt to install required packages
 
+### Creating initial data files
+
+Run the following code: 
+
+```bash
+python create_datasets.py
+```
+
+Relevant files:
+
+src/preprocessing/
+    create_datasets.py   --  runs everything else - our main entry point
+    parse_data.py        -- parses .cha files
+    clean_text.py        --  cleans utterances
+    data_classes.py      -- defines ParsedSpeech, Utterance, etc.
+	create_master_csv.py -- creates 
+
 ### Data files:
 
 No sound level data included at this time as only a few datasets have this.
