@@ -25,7 +25,8 @@ Develop NLP models that assist early screening of language disorders
 - [Step 2: Features and Embeddings](#step-2-features-and-embeddings)
 - [Step 3: Baseline Models](#step-3-baseline-models)
 - [Step 4: Transformer Model](#step-4-transformer-model)
-- [Results](#results)
+- [Transformer Results](#results)
+- [Performance Comparisons](#performance-comparisons)
 - [References](#references)
 
 
@@ -188,142 +189,73 @@ Files that aren't parsed successfully are skipped without crashing the pipeline 
 
 ## Step 2: Features and Embeddings
 
-## Step 3: Baseline Models
+TF-IDF embeddings
 
-
-OLD VERSION:
------
-### Creating initial data files
-
-Run the following code for step 1:
-
-```bash
-python create_master_csv.py
-```
-
-```bash
-python create_datasets.py
-```
-
-### Related files:
-
-
-
-### Data files:
-
-No sound level data included at this time as only a few datasets have this.
-
-Processed files are located in talkbank_project/data/processed
-
-	1. child_utterances.csv
-
-		About: One row for child utterance. This is the raw text, with cleaned text variance, all CHAT feature counts like pauses, disfuencies, etc. Also includes morphological annotations and metadata like age, sex.
-		
-		Label indicates if disordered or not.
-
-	2. all_utterances.csv
-	
-		About: The same as child_utterances but includes the parent, sibling, or other person talking with the child who is the focus. 
-	
-		Useful if you want conversational context or interactions beyond just how the child talks.
-
-	3. child_context_windows.csv
-
-		About: child utterances, but each row also has the context before the child spoke and after. 
-
-		Useful for conversations, or just including broader context.
-
-	4. session_level.csv
-		
-		About: One row per speech recording. Features are summed and averaged across the number of child utterences. 
-
-	5. pipeline_warnings.csv
-
-		About: Not actually data. Includes information on cases when the age or sex of a child doesn't match what is in files_master.csv. This could happen due to parsing errors. Isn't a huge number of cases, but these could be 		addressed later on, time permitting
-		
-Raw files can be found in talkbank_project/data/raw.
-
-### Master File Info:
-
-	1.file_info/files_master.csv
-
-		A csv containing information about all files in the dataset. One row per .cha file. Columns include file_id, file_path, label, label_binary, age, sex, include_v1.
-		include_v1 notes if a given file was included in the first version of the pipeline, which included only controls, and children marked "SLI" or "lang_disorder" (small number of files just said "lang disorder")
-
-### Notebooks
-
-	1. notebooks/nlp_project_exploration.ipynb
-
-		Just mesing around inspecting the way the .cha files are set up. Not EDA. Just for basic data processing.
-
-### USEFUL NOTES:
-
-	label_binary = 0 if typically developing control
-	1 = SLI or language disorder (other types of language disorders not included for V1 like down syndrome, hearing loss, late_talker, etc.) Will be very easy to include these in future.
-
-
-## Embeddings+Initial-Features
-
-### Embeddings:
 ```bash
 python embedding.py
 ```
-(Note:)
 
-### Initial Features:
+Generates TF-IDF feature matrices saved to data/features/ (X_train_tfidf.npz, etc.) along with the fitted vectorizer (tfidf_vectorizer.joblib).
+
+### Train/val/test split
+The split used for all models is stored in split_manifest_by_pid.csv. This uses the script split_by_pid.py and ensures that no individual child, identified by participant ID, appears in more than one of train, validation, and test. This presents data leakage across sessions from the same child, and prevents the transformer superficially learning to identify a given child instead of the differences between disordered and regular speech. 
+
+The split_by_pid.py script is called when running the transformerB.py script, see below for further details. This generates the split from the child_utterances.csv file. 
+
 ```bash
-python IFeature.py
+python transformerB.py
 ```
-(Note: )
 
-## Baseline-model-training
+## Step 3: Baseline Models
 
-### Majority class
+### Majority class 
+
 ```bash
-python majorityC.py
+python transformerB.py
 ```
-(Note:)
 
 ### Logistic regression
 ```bash
 python src/models/LogisticR.py
 ```
 
-## Baseline-Results
-### Majority Classifier
-|               |Precision | Recall | f1-score | Support |
-|---------------|-----------|--------|----------|---------|
-| 0 |  0.64 | 1.0 | 0.78 | 270 |
-| 1 |  0 | 0 | 0 | 155 |
+### Baseline Results
 
-### Logistic-Regression
+**Majority Classifier**
 
+| | Precision | Recall | F1-score | Support |
+|--|-----------|--------|----------|---------|
+| 0 (control) | 0.64 | 1.00 | 0.78 | 270 |
+| 1 (SLI) | 0.00 | 0.00 | 0.00 | 155 |
 
-|               |Precision | Recall | f1-score | Support |
-|---------------|-----------|--------|----------|---------|
-| 0 |  0.82 | 0.93 | 0.87 | 270 |
-| 1 |  0.83 | 0.64 | 0.72 | 155 |
+**Logistic Regression**
 
+| | Precision | Recall | F1-score | Support |
+|--|-----------|--------|----------|---------|
+| 0 (control) | 0.82 | 0.93 | 0.87 | 270 |
+| 1 (SLI) | 0.83 | 0.64 | 0.72 | 155 |
 
+## Step 4: Transformer Model
 
-## Transformer
-
-### Transformer building:
+**Build the model:**
 ```bash
 python transformerB.py
 ```
-(Note: may compare performance on pretrained model vs. from scratch)
 
-### Transformer training:
+Building the model requires the file child_utterances.csv and relies on files split_by_pid.py and load_data.py
+
+**Train the model:**
 ```bash
 python transformerT.py
 ```
-(Note: )
 
-## Performance-Comparisons
+transformerT.py calls load_data.py and split_by_pid.py to load, batch, and split the data. The script currently builds the dataset on child_utterances.csv, but can be edited to take in other files, including per session.
 
-## Results
+## Transformer Results
 
+*(To be updated)*
+
+## Performance Comparisons
 
 ## References
 
