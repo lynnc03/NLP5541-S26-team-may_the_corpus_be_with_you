@@ -189,6 +189,8 @@ Files that aren't parsed successfully are skipped without crashing the pipeline 
 
 ## Step 2: Features and Embeddings
 
+**** ALAN add more here???
+
 TF-IDF embeddings
 
 ```bash
