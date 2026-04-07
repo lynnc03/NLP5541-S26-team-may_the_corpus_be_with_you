@@ -210,15 +210,15 @@ python transformerB.py
 
 ## Step 3: Baseline Models
 
-### Majority class 
+### Majority Class 
 
 ```bash
-python transformerB.py
+python majorityC.py
 ```
 
-### Logistic regression
+### Logistic Regression
 ```bash
-python src/models/LogisticR.py
+python LogisticR.py
 ```
 
 ### Baseline Results
