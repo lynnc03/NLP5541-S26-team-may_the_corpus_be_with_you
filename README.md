@@ -314,7 +314,19 @@ Warmup Steps: 2700
 |--|-----------|--------|----------|---------|
 | 1 (SLI) | 0.6445 | 0.7253 | 0.6725 | 0.6825 |
 
-**Run 5 is 7 epochs.
+**Run 5
+
+Epochs: 7
+Learning rate: 1e-5
+Batch: 16
+Classification head: MLP
+Label smoothing: 0.1
+Dropout: 0.2
+Warmup Steps: 2700
+
+| | Precision | Recall | Accuracy | F1-score  |
+|--|-----------|--------|----------|---------|
+| 1 (SLI) | 0.6355 | 0.7367 | 0.6672 | 0.6824 |
 
 **Run 6, swap back to 2e-5 learning rate? other settings?
 
