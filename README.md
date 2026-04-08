@@ -239,6 +239,8 @@ python LogisticR.py
 
 ## Step 4: Transformer Model
 
+Fine-tuned pre-trained DistilBERT model, for binary classification of child utterances into 0: no language disorder present or 1: language disorder present. The architecture combines text embeddings concatenated with numerical features, for further context as pauses and other forms of non-verbal communication are encoded via numerical features. Model training is done via Cross Entropy Loss and model selection is done via F1-score.
+
 **Build the model:**
 ```bash
 python transformerB.py
@@ -255,7 +257,67 @@ transformerT.py calls load_data.py and split_by_pid.py to load, batch, and split
 
 ## Transformer Results
 
-*(To be updated)*
+** in progress **
+
+**MORE Parameters to include? weight decay?
+**Do i want to update to include class 0 too? only evaluating on class 1 performance though
+
+**Run 1:
+
+Epochs: 5
+Learning-rate: 2e-5
+Batch: 16
+Classification head: Linear only
+Dropout: 0.1
+
+| | Precision | Recall | Accuracy | F1-score  |
+|--|-----------|--------|----------|---------|
+| 1 (SLI) | 0.6352 | 0.7214 | 0.6638 | 0.6756 |
+
+**Run 2:
+
+Epochs: 3
+Learning rate: 1e-5
+Batch: 16
+Classification head: Linear only
+Dropout: 0.1
+
+| | Precision | Recall | Accuracy | F1-score  |
+|--|-----------|--------|----------|---------|
+| 1 (SLI) | 0.6319 | 0.725 | 0.6617 | 0.6753 |
+
+**Run 3:
+
+Epochs: 3
+Learning rate: 1e-5
+Batch: 16
+Classification head: Linear only
+Added label smoothing = 0.1
+Dropout: 0.2
+Warmup Steps: 2700 **ADD MORE NOTES ABOUT THIS
+
+| | Precision | Recall | Accuracy | F1-score  |
+|--|-----------|--------|----------|---------|
+| 1 (SLI) | 0.6221 | 0.7421 | 0.6561 | 0.6768 |
+
+**Run 4:
+
+Epochs: 5
+Learning rate: 1e-5
+Batch: 16
+Classification head: MLP
+Label smoothing = 0.1
+Dropout: 0.2
+Warmup Steps: 2700
+
+| | Precision | Recall | Accuracy | F1-score  |
+|--|-----------|--------|----------|---------|
+| 1 (SLI) | 0.6445 | 0.7253 | 0.6725 | 0.6825 |
+
+**Run 5 is 7 epochs.
+
+**Run 6, swap back to 2e-5 learning rate? other settings?
+
 
 ## Performance Comparisons
 
