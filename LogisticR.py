@@ -27,6 +27,6 @@ def run_experiment(name, path):
 
 
 #  3 experiments
-run_experiment("TF-IDF (clean)", "/data/features/clean")
-run_experiment("TF-IDF (disfluency)", "/data/features/disfluency")
-run_experiment("TF-IDF (special tokens)", "/data/features/special_tokens")
+run_experiment("TF-IDF (clean)", "data/features/clean")
+run_experiment("TF-IDF (disfluency)", "data/features/disfluency")
+run_experiment("TF-IDF (special tokens)", "data/features/special_tokens")
