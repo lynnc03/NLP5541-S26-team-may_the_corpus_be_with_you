@@ -232,11 +232,24 @@ python LogisticR.py
 
 **Logistic Regression**
 
+Embedding + Tokenization
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
-| 0 (control) | 0.82 | 0.93 | 0.87 | 270 |
-| 1 (SLI) | 0.83 | 0.64 | 0.72 | 155 |
+| 0 (control) | 0.79 | 0.89 | 0.84 | 270 |
+| 1 (SLI) | 0.75 | 0.60 | 0.67 | 155 |
 
+Embedding 
+| | Precision | Recall | F1-score | Support |
+|--|-----------|--------|----------|---------|
+| 0 (control) | 0.79 | 0.89 | 0.84 | 270 |
+| 1 (SLI) | 0.75 | 0.60 | 0.67 | 155 |
+
+Embedding + Tokenization (start/end)
+| | Precision | Recall | F1-score | Support |
+|--|-----------|--------|----------|---------|
+| 0 (control) | 0.79 | 0.89 | 0.84 | 270 |
+| 1 (SLI) | 0.75 | 0.59 | 0.66 | 155 |
+		   
 ## Step 4: Transformer Model
 
 Fine-tuned pre-trained DistilBERT model, for binary classification of child utterances into 0: no language disorder present or 1: language disorder present. The architecture combines text embeddings concatenated with numerical features, for further context as pauses and other forms of non-verbal communication are encoded via numerical features. Model training is done via Cross Entropy Loss and model selection is done via F1-score.
