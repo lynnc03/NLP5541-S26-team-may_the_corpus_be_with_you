@@ -210,6 +210,18 @@ python transformerB.py
 
 ## Step 3: Baseline Models
 
+To establish baselines, we implemented majority classifier and logistic regression models using different text representation strategies. 
+
+We compare three variations:
+
+1. Embedding + TF-IDF (Clean Text)
+Text is preprocessed and tokenized before vectorization.
+These texts are normalized and concatenated before applying TF-IDF
+2. Embedding + TF-IDF (Disfluency-Tagged Text)
+This version includes disfluency-related tokens (e.g., fillers or repetitions), allowing the model to capture additional linguistic cues.
+3. Embedding + Start/End Tokens
+Each session-level document is augmented with special boundary tokens (e.g., <START> and <END>).
+
 ### Majority Class 
 
 ```bash
@@ -225,6 +237,7 @@ python LogisticR.py
 
 **Majority Classifier**
 
+All results are identical across the three settings 
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
 | 0 (control) | 0.64 | 1.00 | 0.78 | 270 |
@@ -232,19 +245,19 @@ python LogisticR.py
 
 **Logistic Regression**
 
-Embedding + Tokenization
+Embedding + TF-IDF(clean text)
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
 | 0 (control) | 0.79 | 0.89 | 0.84 | 270 |
 | 1 (SLI) | 0.75 | 0.60 | 0.67 | 155 |
 
-Embedding 
+Embedding + TF-IDF(disfluency-tagged text)
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
 | 0 (control) | 0.79 | 0.89 | 0.84 | 270 |
 | 1 (SLI) | 0.75 | 0.60 | 0.67 | 155 |
 
-Embedding + Tokenization (start/end)
+Embedding + TF-IDF(clean text + start/end)
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
 | 0 (control) | 0.79 | 0.89 | 0.84 | 270 |
