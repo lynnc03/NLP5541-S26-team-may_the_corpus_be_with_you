@@ -298,6 +298,7 @@ transformerT.py calls load_data.py and split_by_pid.py to load, batch, and split
 **MORE Parameters to include? weight decay?
 **Do i want to update to include class 0 too? only evaluating on class 1 performance though
 
+***REDO for both 0 and 1 classes results GC will remove later****
 **Run 1:
 
 Epochs: 5
@@ -377,11 +378,15 @@ Warmup steps: 2700
 Eval steps: 2000 steps
 Weight decay: 0.01
 
+***end to redo section
+
 ## Run 6 Performance
 
 **Overall Accuracy: 0.6843**
 Support Control: 29063
 Support SLI: 27402
+
+TEXTCOL: utterance_clean 
 
 | Label       | Precision | Recall | F1-Score |
 |-------------|-----------|--------|----------|
