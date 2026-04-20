@@ -378,10 +378,10 @@ Eval steps: 2000 steps
 Weight decay: 0.01
 
 
-|   Label    | Precision | Recall | Accuracy | F1-score|
-|------------|-----------|--------|----------|---------|
-|0 (Control) | 0.6968    | 0.6845 | 0.       | 0.6906  |
-|1 (SLI)     | 0.6715    | 0.6841 | 0.       | 0.6777  |
+|   Label    | Precision | Recall | F1-score| Accuracy Overall: 0.6843
+|------------|-----------|--------|---------|
+|0 (Control) | 0.6968    | 0.6845 | 0.6906  |
+|1 (SLI)     | 0.6715    | 0.6841 | 0.6777  |
 
 ## Performance Comparisons
 
