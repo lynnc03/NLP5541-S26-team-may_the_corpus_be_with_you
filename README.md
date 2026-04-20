@@ -359,13 +359,29 @@ Classification head: MLP
 Label smoothing: 0.1
 Dropout: 0.2
 Warmup Steps: 2700
+Eval Steps: 5000
 
 | | Precision | Recall | Accuracy | F1-score  |
 |--|-----------|--------|----------|---------|
 | 1 (SLI) | 0.6355 | 0.7367 | 0.6672 | 0.6824 |
 
-**Run 6, swap back to 2e-5 learning rate? other settings?
+**Run 6
 
+Epochs: 5
+Learning rate: 2e-5
+Batch: 16
+Classification head: MLP
+Label smoothing: 0.1
+Dropout: 0.2
+Warmup steps: 2700
+Eval steps: 2000 steps
+Weight decay: 0.01
+
+
+|   Label    | Precision | Recall | Accuracy | F1-score|
+|------------|-----------|--------|----------|---------|
+|0 (Control) | 0.6968    | 0.6845 | 0.       | 0.6906  |
+|1 (SLI)     | 0.6715    | 0.6841 | 0.       | 0.6777  |
 
 ## Performance Comparisons
 
