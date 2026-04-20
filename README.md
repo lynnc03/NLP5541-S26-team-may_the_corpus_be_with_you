@@ -377,11 +377,17 @@ Warmup steps: 2700
 Eval steps: 2000 steps
 Weight decay: 0.01
 
+## Run 6 Performance
 
-|   Label    | Precision | Recall | F1-score| Accuracy Overall: 0.6843
-|------------|-----------|--------|---------|
-|0 (Control) | 0.6968    | 0.6845 | 0.6906  |
-|1 (SLI)     | 0.6715    | 0.6841 | 0.6777  |
+**Overall Accuracy: 0.6843**
+Support Control: 29063
+Support SLI: 27402
+
+| Label       | Precision | Recall | F1-Score |
+|-------------|-----------|--------|----------|
+| 0 (Control) | 0.6968    | 0.6845 | 0.6906   |
+| 1 (SLI)     | 0.6715    | 0.6841 | 0.6777   |
+| Macro Avg   | 0.6842    | 0.6843 | 0.6842   |
 
 ## Performance Comparisons
 
