@@ -35,15 +35,28 @@ Develop NLP models that assist early screening of language disorders
 project_root/
 │
 ├── data/
-│   ├── features/                         #Initial features and train/test split ****NOTE: redo due to leakage.
-│   │   ├── X_train_tfidf.npz
-│   │   ├── X_val_tfidf.npz
-│   │   ├── X_test_tfidf.npz
-│   │   ├── y_train.npy / y_val.npy / y_test.npy
-│   │   ├── tfidf_vectorizer.joblib
-│   │   ├── split_manifest.csv            #Initial train/val/test split ***NOTE: Redo due to leakage. Don't use, use later split manifest
-│   │   └── embedding_run.json
-│   └── transformer_experiments/          #Tokenization experiment outputs **NOTE: Redo due to stratificaiton leakage
+│   ├── features/                         #TF-IDF feature matrices, one subfolder per text variant
+│   │   ├── clean/                        #Clean text: CHAT notation stripped, errors corrected
+│   │   │   ├── X_train_tfidf.npz
+│   │   │   ├── X_val_tfidf.npz
+│   │   │   ├── X_test_tfidf.npz
+│   │   │   ├── y_train.npy / y_val.npy / y_test.npy
+│   │   │   ├── tfidf_vectorizer.joblib
+│   │   │   └── embedding_run.json
+│   │   ├── disfluency/                   #Disfluency-tagged text: fillers/repetitions as explicit tokens
+│   │   │   ├── X_train_tfidf.npz / X_val_tfidf.npz / X_test_tfidf.npz
+│   │   │   ├── y_train.npy / y_val.npy / y_test.npy
+│   │   │   ├── tfidf_vectorizer.joblib
+│   │   │   └── embedding_run.json
+│   │   ├── special_tokens/               #Clean text augmented with <START> and <END> boundary tokens
+│   │   │   ├── X_train_tfidf.npz / X_val_tfidf.npz / X_test_tfidf.npz
+│   │   │   ├── y_train.npy / y_val.npy / y_test.npy
+│   │   │   ├── tfidf_vectorizer.joblib
+│   │   │   └── embedding_run.json
+│   │   └── split_manifest.csv            #Initial train/val/test split — do not use (data leakage)
+│   └── transformer_experiments/          #Tokenization experiment outputs
+│       ├── tokenization_experiment_metrics.csv
+│       └── tokenization_experiment_metrics.json
 │
 ├── file_info/
 │   └── files_master.csv                  #Master registry of all .cha files (manually annotated)
@@ -51,26 +64,26 @@ project_root/
 ├── notebooks/
 │   └── nlp_project_exploration.ipynb     #Initial .cha file exploration (not formal EDA)
 │
-├── preprocessing/                        #Core preprocessing pipeline
-│   ├── create_master_csv.py              #Step 1a: Scans corpus dirs, generate file registry
-│   ├── parse_data.py                     #Step 1b: Parse .cha files - ParsedSpeech objects
-│   ├── data_classes.py                   #Dataclasses: ParsedSpeech, Utterance, Metadata, etc.
-│   ├── clean_text.py                     #Step 1c: CHAT notation - clean/surface/tagged text
-│   └── create_datasets.py                #Step 1d: Orchestrate pipeline, write output CSVs
-│
 ├── src/
 │   ├── features/
-│   │   ├── tfidf_pipeline.py             #TF-IDF feature extraction pipeline **REDO due to leakage??
-│   │   └── transformer_tokenization_ex.. #Tokenization experiments **REDO due to leakage?
-│   └── models/
-│       └── majority_classifier.py        #Majority class baseline **REDO?
+│   │   ├── tfidf_pipeline.py             #Original TF-IDF feature extraction pipeline
+│   │   ├── tfidf_pipeline_update.py      #Updated TF-IDF pipeline generating three variant subfolders
+│   │   └── transformer_tokenization_experiments.py  #Tokenization experiments
+│   ├── models/
+│   │   └── majority_classifier.py        #Majority class baseline (src/ version)
+│   └── preprocessing/                    #Core preprocessing pipeline
+│       ├── create_master_csv.py          #Step 1a: Scans corpus dirs, generates file registry
+│       ├── parse_data.py                 #Step 1b: Parses .cha files into ParsedSpeech objects
+│       ├── data_classes.py               #Dataclasses: ParsedSpeech, Utterance, Metadata, etc.
+│       ├── clean_text.py                 #Step 1c: CHAT notation → clean/surface/tagged text
+│       └── create_datasets.py            #Step 1d: Orchestrates pipeline, writes output CSVs
 │
-├── LogisticR.py                          #Logistic regression baseline
-├── embedding.py                          #TF-IDF embedding pipeline
-├── majorityC.py                          #Majority class baseline
-├── tokenization.py                       #TODO: if you made this, fill in info
-├── split_manifest_by_pid.csv             #Corrected train/val/test split by participant ID 
-│                                         #   — use this for the transformer, not split_manifest.csv
+├── LogisticR.py                          #Logistic regression baseline (current version)
+├── embedding.py                          #TF-IDF embedding pipeline (current version)
+├── majorityC.py                          #Majority class baseline (current version)
+├── tokenization.py                       #Tokenization utilities
+├── split_manifest_by_pid.csv             #Corrected train/val/test split by participant ID
+│                                         #   — use this for all models, not split_manifest.csv
 ├── transformerB.py                       #Transformer model definition
 ├── transformerT.py                       #Transformer training script
 ├── load_data.py                          #Data loader for transformer pipeline
@@ -79,8 +92,7 @@ project_root/
 └── README.md
 ```
 
-Notes: data/features/split_manifest.csv contains a data split that does not separate participants by PID across train/val/test sets, instead using splits from session ID. This creates data leakage due to some participnats having multiple sessions. Instead, split_manifest_by_pid.csv (root directory) is the corrected split used for the transformer, which ensures no child appears in more than one split.
-TODO: Duplicate files: Several files appear in both the root directory and src/ (e.g., majorityC.py and src/models/majority_classifier.py). Please update README + structure to specify which one is current version.
+Note: `data/features/split_manifest.csv` uses a split by session ID that causes data leakage (some children have multiple sessions). Use `split_manifest_by_pid.csv` in the root directory instead — it ensures no child appears in more than one split.
 
 ## Dependencies/Installation
 
@@ -134,19 +146,19 @@ create_datasets.py orchestrates the full pipeline: reads files_master.csv, filte
 Step 1a. Generate master csv file:
 
 ```bash
-python preprocessing/create_master_csv.py
+python src/preprocessing/create_master_csv.py
 ```
 Then manually fill in label, label_binary, include_v1, and has_audio in file_info/files_master.csv.
 
 Step 1b. Run the full pipeline:
 
 ```bash
-python preprocessing/create_datasets.py
+python src/preprocessing/create_datasets.py
 ```
 
 Optional arguments:
 ```bash
-python preprocessing/create_datasets.py \
+python src/preprocessing/create_datasets.py \
   --registry file_info/files_master.csv \
   --raw_root data/raw/ \
   --output data/processed/
@@ -155,7 +167,7 @@ python preprocessing/create_datasets.py \
 I advise testing the parser on a single file at first. To do so, run:
 
 ```bash
-python preprocessing/parse_data.py path/to/file.cha
+python src/preprocessing/parse_data.py path/to/file.cha
 ```
 
 ### Output files:
@@ -189,15 +201,13 @@ Files that aren't parsed successfully are skipped without crashing the pipeline 
 
 ## Step 2: Features and Embeddings
 
-**** ALAN add more here???
-
-TF-IDF embeddings
+Three TF-IDF feature variants are generated from the preprocessed text, corresponding to the three baseline model comparisons. Each variant is saved in its own subfolder under `data/features/`.
 
 ```bash
 python embedding.py
 ```
 
-Generates TF-IDF feature matrices saved to data/features/ (X_train_tfidf.npz, etc.) along with the fitted vectorizer (tfidf_vectorizer.joblib).
+This runs `src/features/tfidf_pipeline_update.py` and generates three sets of TF-IDF feature matrices under `data/features/clean/`, `data/features/disfluency/`, and `data/features/special_tokens/`. Each folder contains `X_train_tfidf.npz`, `X_val_tfidf.npz`, `X_test_tfidf.npz`, label arrays (`y_*.npy`), the fitted `tfidf_vectorizer.joblib`, and an `embedding_run.json` metadata file.
 
 ### Train/val/test split
 The split used for all models is stored in split_manifest_by_pid.csv. This uses the script split_by_pid.py and ensures that no individual child, identified by participant ID, appears in more than one of train, validation, and test. This presents data leakage across sessions from the same child, and prevents the transformer superficially learning to identify a given child instead of the differences between disordered and regular speech. 
