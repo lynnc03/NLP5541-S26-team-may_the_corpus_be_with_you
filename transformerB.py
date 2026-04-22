@@ -1,5 +1,6 @@
 #transformerB.py
 import pandas as pd
+import numpy as np
 import torch.nn as nn
 import torch
 from datasets import Dataset
@@ -8,7 +9,7 @@ from transformers import AutoTokenizer, AutoModel
 from transformers.modeling_outputs import SequenceClassifierOutput
 
 class DistilBertVersion(nn.Module):
-  def __init__(self, model_name: str, num_features: int, num_classes: int, dropout: float) -> None:
+  def __init__(self, model_name: str, num_features: int, num_classes: int, dropout: float, class_weights: torch.Tensor | None = None) -> None:
     super().__init__()
   
     self.bert = AutoModel.from_pretrained(model_name)
@@ -21,7 +22,7 @@ class DistilBertVersion(nn.Module):
         nn.Dropout(dropout),
         nn.Linear(256, num_classes)
     )
-    self.loss_fn = nn.CrossEntropyLoss(label_smoothing=0.1)
+    self.loss_fn = nn.CrossEntropyLoss(weight=class_weights, label_smoothing=0.1)
 
   ##forward pass
   def forward(self, input_ids: torch.Tensor, attention_mask: torch.Tensor, features: torch.Tensor, labels: torch.Tensor | None = None ) -> SequenceClassifierOutput:
@@ -62,7 +63,11 @@ class TransformerBuilder:
     self.scaler = StandardScaler()
     self._scaler_fitted = False
 
-    self.model = DistilBertVersion(self.model_name, len(self.feature_cols), self.num_labels, dropout=0.2)
+    train_labels = self.train_df[self.label_col].astype(int).values
+    counts = np.bincount(train_labels)
+    weights = torch.tensor(len(train_labels)/(len(counts) * counts), dtype=torch.float).to(self.device)
+
+    self.model = DistilBertVersion(self.model_name, len(self.feature_cols), self.num_labels, dropout=0.2, class_weights = weights)
     self.model.to(self.device)
 
   def fit_scaler(self) -> None:
