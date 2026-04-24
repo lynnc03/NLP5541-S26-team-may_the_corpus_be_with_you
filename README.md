@@ -245,33 +245,41 @@ python LogisticR.py
 
 ### Baseline Results
 
+All baseline results use utterance-level splits (one row per utterance), with train/val/test split controlled by participant ID to prevent data leakage. Test set: 53,968 utterances (27,275 control / 26,693 SLI).
+
 **Majority Classifier**
 
-All results are identical across the three settings 
+All results are identical across the three settings.
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
-| 0 (control) | 0.64 | 1.00 | 0.78 | 270 |
-| 1 (SLI) | 0.00 | 0.00 | 0.00 | 155 |
+| 0 (control) | 0.00 | 0.00 | 0.00 | 27,275 |
+| 1 (SLI) | 0.49 | 1.00 | 0.66 | 26,693 |
 
 **Logistic Regression**
 
-Embedding + TF-IDF(clean text)
+Embedding + TF-IDF (clean text)
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
-| 0 (control) | 0.79 | 0.89 | 0.84 | 270 |
-| 1 (SLI) | 0.75 | 0.60 | 0.67 | 155 |
+| 0 (control) | 0.67 | 0.56 | 0.61 | 27,275 |
+| 1 (SLI) | 0.62 | 0.71 | 0.66 | 26,693 |
 
-Embedding + TF-IDF(disfluency-tagged text)
-| | Precision | Recall | F1-score | Support |
-|--|-----------|--------|----------|---------|
-| 0 (control) | 0.79 | 0.89 | 0.84 | 270 |
-| 1 (SLI) | 0.75 | 0.60 | 0.67 | 155 |
+ROC AUC: 0.696
 
-Embedding + TF-IDF(clean text + start/end)
+Embedding + TF-IDF (disfluency-tagged text)
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
-| 0 (control) | 0.79 | 0.89 | 0.84 | 270 |
-| 1 (SLI) | 0.75 | 0.59 | 0.66 | 155 |
+| 0 (control) | 0.67 | 0.57 | 0.62 | 27,275 |
+| 1 (SLI) | 0.62 | 0.71 | 0.66 | 26,693 |
+
+ROC AUC: 0.696
+
+Embedding + TF-IDF (clean text + start/end tokens)
+| | Precision | Recall | F1-score | Support |
+|--|-----------|--------|----------|---------|
+| 0 (control) | 0.67 | 0.57 | 0.62 | 27,275 |
+| 1 (SLI) | 0.62 | 0.72 | 0.66 | 26,693 |
+
+ROC AUC: 0.698
 		   
 ## Step 4: Transformer Model
 

@@ -4,7 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 
-path = "data/features/clean"
+path = "data/features/utterance/clean"
 
 # Load data
 X_train = sparse.load_npz(f"{path}/X_train_tfidf.npz")

@@ -1,9 +1,12 @@
 """
-Session-level TF-IDF embeddings from processed child utterances.
+TF-IDF embeddings from processed child utterances.
 
 Reads data/processed/child_utterances.csv (output of create_datasets.py),
-aggregates CHI utterances into one document per file_id, fits TF-IDF on
-train split only, saves sparse matrices and a split manifest for baselines.
+fits TF-IDF on train split only, saves sparse matrices and a split manifest.
+
+Two modes (--level):
+  session   — aggregate all utterances per file_id into one document (legacy)
+  utterance — one row per utterance, matching the transformer's granularity
 """
 
 from __future__ import annotations
@@ -20,8 +23,6 @@ import pandas as pd
 from scipy import sparse
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
-
-import argparse
 
 
 logging.basicConfig(
@@ -78,6 +79,24 @@ def build_session_table(
     out = out[out["session_text"].str.len() > 0]
     out["label_binary"] = out["label_binary"].astype(int)
     return out
+
+
+def build_utterance_table(
+    utterances_df: pd.DataFrame,
+    text_column: str,
+) -> pd.DataFrame:
+    """One row per utterance — matches the transformer's granularity."""
+    if text_column not in utterances_df.columns:
+        raise ValueError(f"Missing column {text_column!r} in utterances CSV")
+
+    df = utterances_df.copy()
+    df["label_binary"] = pd.to_numeric(df["label_binary"], errors="coerce")
+    df = df.dropna(subset=["label_binary", text_column])
+    df = df[df[text_column].astype(str).str.strip().str.len() > 0].copy()
+    df["label_binary"] = df["label_binary"].astype(int)
+    df["session_text"] = df[text_column].astype(str).str.strip()
+    keep = [c for c in ["file_id", "label_binary", "corpus", "session_text"] if c in df.columns]
+    return df[keep].reset_index(drop=True)
 
 
 #def make_splits(
@@ -138,7 +157,7 @@ def apply_predefined_split(
 
 def run_pipeline(
     utterances_path: Path,
-    split_path: Path, ##add split file
+    split_path: Path,
     out_dir: Path,
     text_column: str,
     test_size: float,
@@ -148,25 +167,30 @@ def run_pipeline(
     ngram_max: int,
     min_df: int,
     max_df: float,
-    add_special_tokens: bool = False,  ##test no tokenization 
+    add_special_tokens: bool = False,
+    level: str = "session",
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     log.info("Loading %s", utterances_path)
     utt = pd.read_csv(utterances_path, low_memory=False)
-    sessions = build_session_table(utt, text_column=text_column)
-    log.info("Sessions with non-empty text: %d", len(sessions))
-    log.info("Label counts:\n%s", sessions["label_binary"].value_counts().sort_index().to_string())
-    
-    #add START/END tokens
+
+    if level == "utterance":
+        table = build_utterance_table(utt, text_column=text_column)
+        log.info("Utterances with non-empty text: %d", len(table))
+    else:
+        table = build_session_table(utt, text_column=text_column)
+        log.info("Sessions with non-empty text: %d", len(table))
+
+    log.info("Label counts:\n%s", table["label_binary"].value_counts().sort_index().to_string())
+
     if add_special_tokens:
         log.info("Adding START/END tokens")
-        sessions["session_text"] = sessions["session_text"].apply(
+        table["session_text"] = table["session_text"].apply(
             lambda x: f"<START> {x} <END>"
         )
-        
-    #split pid
-    train_df, val_df, test_df = apply_predefined_split(sessions, split_path)
+
+    train_df, val_df, test_df = apply_predefined_split(table, split_path)
 
 
     #train_df, val_df, test_df = make_splits(
@@ -209,9 +233,10 @@ def run_pipeline(
     meta = {
         "utterances_csv": str(utterances_path.resolve()),
         "text_column": text_column,
-        "n_sessions_train": int(len(train_df)),
-        "n_sessions_val": int(len(val_df)),
-        "n_sessions_test": int(len(test_df)),
+        "level": level,
+        "n_train": int(len(train_df)),
+        "n_val": int(len(val_df)),
+        "n_test": int(len(test_df)),
         "vocabulary_size": int(X_train.shape[1]),
         "test_size": test_size,
         "val_size": val_size,
@@ -228,36 +253,22 @@ def run_pipeline(
 
 def main(argv: list[str] | None = None) -> None:
     root = project_root_from_here()
-    default_utt = root / "data" / "processed" /  "child_utterances.csv"
+    default_utt = root / "data" / "processed" / "child_utterances.csv"
     default_out = root / "data" / "features"
+    default_split = root / "split_manifest_by_pid.csv"
 
-    p = argparse.ArgumentParser(description="Build session-level TF-IDF embeddings.")
-    p.add_argument(
-        "--utterances_csv",
-        type=Path,
-        default=default_utt,
-        help="Path to child_utterances.csv from create_datasets.py",
-    )
-    
-    p.add_argument(
-    "--split_csv",
-    type=Path,
-    default=default_out / "split_manifest_by_pid.csv",
-    help="Path to predefined split CSV"
-    )
-    
+    p = argparse.ArgumentParser(description="Build TF-IDF embeddings (session or utterance level).")
+    p.add_argument("--utterances_csv", type=Path, default=default_utt)
+    p.add_argument("--split_csv", type=Path, default=default_split,
+                   help="PID-controlled split manifest (split_manifest_by_pid.csv)")
     p.add_argument("--out_dir", type=Path, default=default_out)
     p.add_argument(
         "--text_column",
         default="utterance_clean",
-        choices=[
-            "utterance_clean",
-            "utterance_surface",
-            "utterance_disfluency_tagged",
-            "utterance_raw",
-        ],
-        help="Which utterance text field to concatenate per session",
+        choices=["utterance_clean", "utterance_surface", "utterance_disfluency_tagged", "utterance_raw"],
     )
+    p.add_argument("--level", default="utterance", choices=["session", "utterance"],
+                   help="Granularity: 'utterance' matches the transformer; 'session' aggregates per recording")
     p.add_argument("--test_size", type=float, default=0.15)
     p.add_argument("--val_size", type=float, default=0.15)
     p.add_argument("--seed", type=int, default=42)
@@ -265,37 +276,19 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--ngram_max", type=int, default=2)
     p.add_argument("--min_df", type=int, default=2)
     p.add_argument("--max_df", type=float, default=0.95)
-    
-    ### START/END tokens
     p.add_argument("--add_special_tokens", action="store_true")
 
     args = p.parse_args(argv)
 
-    utt_path = args.utterances_csv
-    if not utt_path.is_file():
+    if not args.utterances_csv.is_file():
         log.error(
             "File not found: %s\n"
-            "Step 1: From repo root, run the preprocessing pipeline to create it:\n"
-            "  cd src/preprocessing\n"
-            "  python create_datasets.py --registry ../../file_info/files_master.csv "
-            "--raw_root ../.. --output ../../",
-            utt_path,
+            "Run the preprocessing pipeline first:\n"
+            "  python src/preprocessing/create_datasets.py",
+            args.utterances_csv,
         )
         sys.exit(1)
 
-    #run_pipeline(
-    #    utterances_path=utt_path,
-    #    out_dir=args.out_dir,
-    #    text_column=args.text_column,
-    #    test_size=args.test_size,
-    #    val_size=args.val_size,
-    #    seed=args.seed,
-    #    max_features=args.max_features or None,
-    #    ngram_max=args.ngram_max,
-    #    min_df=args.min_df,
-    #    max_df=args.max_df,
-    #)
-    
     run_pipeline(
         utterances_path=args.utterances_csv,
         split_path=args.split_csv,
@@ -309,6 +302,7 @@ def main(argv: list[str] | None = None) -> None:
         min_df=args.min_df,
         max_df=args.max_df,
         add_special_tokens=args.add_special_tokens,
+        level=args.level,
     )
 
 
