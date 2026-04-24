@@ -1,0 +1,9 @@
+{
+  "level": "utterance",
+  "text_column": "utterance_disfluency_tagged",
+  "add_special_tokens": false,
+  "n_train": 228355,
+  "n_val": 49970,
+  "n_test": 53968,
+  "vocab_size": 50000
+}
