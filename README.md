@@ -374,7 +374,7 @@ Eval Steps: 5000
 |--|-----------|--------|----------|---------|
 | 1 (SLI) | 0.6355 | 0.7367 | 0.6672 | 0.6824 |
 
-**Run 6
+## Run 6
 
 Epochs: 5
 Learning rate: 2e-5
@@ -386,9 +386,7 @@ Warmup steps: 2700
 Eval steps: 2000 steps
 Weight decay: 0.01
 
-***end to redo section
-
-## Run 6 Performance
+### Run 6 Performance
 
 **Overall Accuracy: 0.6843**
 Support Control: 29063
@@ -402,9 +400,11 @@ TEXTCOL: utterance_clean
 | 1 (SLI)     | 0.6715    | 0.6841 | 0.6777   |
 | Macro Avg   | 0.6842    | 0.6843 | 0.6842   |
 
-## Run 7 Performance
+## Run 7 
 
 Same as Run 6 but with thresholding to calculate best decision threshold
+
+### Run 7 Performance
 
 **Overall Accuracy: 0.6833**
 Support Control: 29063
