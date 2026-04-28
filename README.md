@@ -402,6 +402,24 @@ TEXTCOL: utterance_clean
 | 1 (SLI)     | 0.6715    | 0.6841 | 0.6777   |
 | Macro Avg   | 0.6842    | 0.6843 | 0.6842   |
 
+## Run 7 Performance
+
+Same as Run 6 but with thresholding to calculate best decision threshold
+
+**Overall Accuracy: 0.6833**
+Support Control: 29063
+Support SLI: 27402
+
+TEXTCOL: utterance_clean 
+
+| Label       | Precision | Recall | F1-Score |
+|-------------|-----------|--------|----------|
+| 0 (Control) | 0.7004    | 0.6722 | 0.6860   |
+| 1 (SLI)     | 0.6666    | 0.6951 | 0.6805   |
+| Macro Avg   | 0.6835    | 0.6836 | 0.6833   |
+
+
+
 ## Performance Comparisons
 
 ## References
