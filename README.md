@@ -374,7 +374,7 @@ Eval Steps: 5000
 |--|-----------|--------|----------|---------|
 | 1 (SLI) | 0.6355 | 0.7367 | 0.6672 | 0.6824 |
 
-# NOTE: input results from run with utterance_raw
+# NOTE: input results from run with utterance_disfluency_tagged
 
 ## Run 6
 
