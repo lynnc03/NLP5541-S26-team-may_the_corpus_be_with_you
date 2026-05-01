@@ -404,7 +404,8 @@ TEXTCOL: utterance_clean
 
 ## Run 7 
 
-Same as Run 6 but with thresholding to calculate best decision threshold
+Same as Run 6 but with thresholding to calculate best decision threshold.
+Best decision threshold = 0.49
 
 ### Run 7 Performance
 
@@ -420,6 +421,21 @@ TEXTCOL: utterance_clean
 | 1 (SLI)     | 0.6666    | 0.6951 | 0.6805   |
 | Macro Avg   | 0.6835    | 0.6836 | 0.6833   |
 
+## Run 8
+
+Same parameters as Run 6, but with thresholding to calculate best decision threshold and using tagged disfluency utterances instead of clean utterances.
+Best decision threshold = 0.50
+
+**Overall Accuracy**: 0.6804
+Support Control: 29063
+Support SLI: 27402
+TEXTCOL: utterance_disfluency_tagged  
+
+| Label       | Precision | Recall | F1-Score |
+|-------------|-----------|--------|----------|
+| 0 (Control) | 0.7008    | 0.6616 | 0.6807   |
+| 1 (SLI)     | 0.6612    | 0.7003 | 0.6802   |
+| Macro Avg   | 0.6804    | 0.6810 | 0.6805   |
 
 
 ## Performance Comparisons
