@@ -445,9 +445,13 @@ Best decision threshold for each utterance = 0.51
 We then pool the participant's utterance classifications to get one participant level label - we pooled the participants probabilities across all utterances and used thresholding to determine the best cutoff for labeling. This resulted in participants with at least 0.51 probability of SLI across all utterances as being labeled as speech exhibiting SLI.
 
 **Overall Accuracy**: 0.8122
+
 Support Control: 271
+
 Support SLI: 155
+
 TEXTCOL: utterance_disfluency_tagged
+
 
 | Label       | Precision | Recall | F1-Score |
 |-------------|-----------|--------|----------|
