@@ -461,8 +461,25 @@ TEXTCOL: utterance_disfluency_tagged
 
 ![Participant level ROC curve](disfluency_tagged_roc_curve_participant_level.png)
 
-***WILL ENTER RESULTS FOR CLEAN UTTERANCES WITH POOLING***
+## Run 10 Perforamnce - Participant Average Pooling
 
+Same parameters as Run 7, and uses clean utterance as the target column. Uses thresholding for participant level and utterance level data. After getting results per utterance, we pool participant level probabilities for all of a particiipant's utterance, and then determine best cutoff for classificaiton. The optimal utterance level threshold is 0.51, and the optimal participant level threshold for pooling is 0.5.
+
+**Overall Accuracy**: 0.8075
+
+Support Control: 271
+
+Support SLI: 155
+
+TEXTCOL: utterance_clean
+
+| Label       | Precision | Recall | F1-Score |
+|-------------|-----------|--------|----------|
+| 0 (Control) | 0.8339    | 0.8709 | 0.8520   |
+| 1 (SLI)     | 0.7553    | 0.6968 | 0.7248   |
+| Macro Avg   | 0.7946    | 0.7839 | 0.7884   |
+
+![Participant level ROC curve](utterance_clean_roc_curve_participant_level.png)
 
 ## Performance Comparisons
 
