@@ -455,7 +455,7 @@ TEXTCOL: utterance_disfluency_tagged
 | 1 (SLI)     | 0.7622    | 0.8782 | 0.7315   |
 | Macro Avg   | 0.7998    | 0.7889 | 0.7936   |
 
-![Participant-level ROC curve](roc_curve_participant_level.png)
+![Participant level ROC curve](disfluency_tagged_roc_curve_participant_level.png)
 
 ***WILL ENTER RESULTS FOR CLEAN UTTERANCES WITH POOLING***
 
