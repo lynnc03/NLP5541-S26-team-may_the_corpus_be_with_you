@@ -437,6 +437,27 @@ TEXTCOL: utterance_disfluency_tagged
 | 1 (SLI)     | 0.6612    | 0.7003 | 0.6802   |
 | Macro Avg   | 0.6804    | 0.6810 | 0.6805   |
 
+## Run 9 Performance - Participant Average Pooling
+
+Same parameters as Run 6 and 7, and uses tagged disfluency utterances and thresholding.
+Best decision threshold for each utterance = 0.51
+
+We then pool the participant's utterance classifications to get one participant level label - we pooled the participants probabilities across all utterances and used thresholding to determine the best cutoff for labeling. This resulted in participants with at least 0.51 probability of SLI across all utterances as being labeled as speech exhibiting SLI.
+
+**Overall Accuracy**: 0.8122
+Support Control: 271
+Support SLI: 155
+TEXTCOL: utterance_disfluency_tagged
+
+| Label       | Precision | Recall | F1-Score |
+|-------------|-----------|--------|----------|
+| 0 (Control) | 0.8375    | 0.8745 | 0.8556   |
+| 1 (SLI)     | 0.7622    | 0.8782 | 0.7315   |
+| Macro Avg   | 0.7998    | 0.7889 | 0.7936   |
+
+
+***WILL ENTER RESULTS FOR CLEAN UTTERANCES WITH POOLING***
+
 
 ## Performance Comparisons
 
