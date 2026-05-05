@@ -307,6 +307,17 @@ TEXTCOL: clean text
 
 Fine-tuned pre-trained DistilBERT model, for binary classification of child utterances into 0: no language disorder present or 1: language disorder present. The architecture combines text embeddings concatenated with numerical features, for further context as pauses and other forms of non-verbal communication are encoded via numerical features. Model training is done via Cross Entropy Loss and model selection is done via F1-score.
 
+### Transformer Run Configuration
+
+The transformer training script uses a configurable text column. In the experiments, we changed this between runs:
+
+- Run 1-7, 10: utterance_clean
+- Run 8, 9: utterance_disfluency_tagged
+
+Other settings varied across experiments, such as learning rate, batch size, number of epochs, dropout, label smoothing, warmup steps, weight decay, and classification head type. 
+
+Final results were produced by aggregating the utterance level predicted probabilities by participant id (pid).
+
 **Build the model:**
 ```bash
 python transformerB.py
