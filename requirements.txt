@@ -8,3 +8,4 @@ transformers>=4.40
 torch>=2.2
 tqdm>=4.66
 datasets>= 2.14
+matplotlib>=3.7
