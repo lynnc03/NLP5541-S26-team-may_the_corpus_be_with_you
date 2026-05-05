@@ -329,7 +329,7 @@ transformerT.py calls load_data.py and split_by_pid.py to load, batch, and split
 **Do i want to update to include class 0 too? only evaluating on class 1 performance though
 
 ***REDO for both 0 and 1 classes results GC will remove later****
-**Run 1:
+## Run 1:
 
 Epochs: 5
 Learning-rate: 2e-5
@@ -341,7 +341,7 @@ Dropout: 0.1
 |--|-----------|--------|----------|---------|
 | 1 (SLI) | 0.6352 | 0.7214 | 0.6638 | 0.6756 |
 
-**Run 2:
+## Run 2:
 
 Epochs: 3
 Learning rate: 1e-5
@@ -353,7 +353,7 @@ Dropout: 0.1
 |--|-----------|--------|----------|---------|
 | 1 (SLI) | 0.6319 | 0.725 | 0.6617 | 0.6753 |
 
-**Run 3:
+## Run 3:
 
 Epochs: 3
 Learning rate: 1e-5
@@ -367,7 +367,7 @@ Warmup Steps: 2700 **ADD MORE NOTES ABOUT THIS
 |--|-----------|--------|----------|---------|
 | 1 (SLI) | 0.6221 | 0.7421 | 0.6561 | 0.6768 |
 
-**Run 4:
+## Run 4:
 
 Epochs: 5
 Learning rate: 1e-5
@@ -381,7 +381,7 @@ Warmup Steps: 2700
 |--|-----------|--------|----------|---------|
 | 1 (SLI) | 0.6445 | 0.7253 | 0.6725 | 0.6825 |
 
-**Run 5
+## Run 5
 
 Epochs: 7
 Learning rate: 1e-5
