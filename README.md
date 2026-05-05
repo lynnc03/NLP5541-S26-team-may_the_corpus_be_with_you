@@ -472,7 +472,7 @@ TEXTCOL: utterance_disfluency_tagged
 | Label       | Precision | Recall | F1-Score |
 |-------------|-----------|--------|----------|
 | 0 (Control) | 0.8375    | 0.8745 | 0.8556   |
-| 1 (SLI)     | 0.7622    | 0.8782 | 0.7315   |
+| 1 (SLI)     | 0.7622    | 0.7032 | 0.7315   |
 | Macro Avg   | 0.7998    | 0.7889 | 0.7936   |
 
 ![Participant level ROC curve](disfluency_tagged_roc_curve_participant_level.png)
