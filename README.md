@@ -283,7 +283,7 @@ Embedding + TF-IDF (clean text + start/end tokens)
 
 ROC AUC: 0.698
 
-## Participant Average Pooling
+**Participant Average Pooling**
 
 Best decision threshold for each utterance = 0.52
 
