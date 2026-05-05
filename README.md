@@ -260,7 +260,7 @@ All results are identical across the three settings.
 Embedding + TF-IDF (clean text)
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
-| 0 (control) | 0.67 | 0.56 | 0.61 | 27,275 |
+| 0 (control) | 0.67 | 0.57 | 0.61 | 27,275 |
 | 1 (SLI) | 0.62 | 0.71 | 0.66 | 26,693 |
 
 ROC AUC: 0.696
@@ -276,10 +276,30 @@ ROC AUC: 0.696
 Embedding + TF-IDF (clean text + start/end tokens)
 | | Precision | Recall | F1-score | Support |
 |--|-----------|--------|----------|---------|
-| 0 (control) | 0.67 | 0.57 | 0.62 | 27,275 |
+| 0 (control) | 0.67 | 0.57 | 0.61 | 27,275 |
 | 1 (SLI) | 0.62 | 0.72 | 0.66 | 26,693 |
 
 ROC AUC: 0.698
+
+## Participant Average Pooling
+
+Best decision threshold for each utterance = 0.52
+
+**Overall Accuracy**: 0.767
+
+Support Control: 271
+
+Support SLI: 155
+
+TEXTCOL: clean text
+
+
+| Label       | Precision | Recall | F1-Score |
+|-------------|-----------|--------|----------|
+| 0 (Control) | 0.7938    | 0.8556 | 0.8235   |
+| 1 (SLI)     | 0.7090    | 0.6129 | 0.6574   |
+
+![Participant level ROC curve](clean_log_reg_roc_curve_participant_level.png)
 		   
 ## Step 4: Transformer Model
 
