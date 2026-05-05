@@ -68,6 +68,7 @@ project_root/
 │   ├── features/
 │   │   ├── tfidf_pipeline.py             #Original TF-IDF feature extraction pipeline
 │   │   ├── tfidf_pipeline_update.py      #Updated TF-IDF pipeline generating three variant subfolders
+│   │   ├── tfidf_pipeline_utt.py         #Updated TF-IDF pipeline generating metadata for participant average pooling
 │   │   └── transformer_tokenization_experiments.py  #Tokenization experiments
 │   ├── models/
 │   │   └── majority_classifier.py        #Majority class baseline (src/ version)
@@ -78,6 +79,7 @@ project_root/
 │       ├── clean_text.py                 #Step 1c: CHAT notation → clean/surface/tagged text
 │       └── create_datasets.py            #Step 1d: Orchestrates pipeline, writes output CSVs
 │
+├── LogisticR-Participant-level.py        #Logistic regression baseline include PID Average pooling(current version)
 ├── LogisticR.py                          #Logistic regression baseline (current version)
 ├── embedding.py                          #TF-IDF embedding pipeline (current version)
 ├── majorityC.py                          #Majority class baseline (current version)
