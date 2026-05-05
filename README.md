@@ -323,12 +323,8 @@ transformerT.py calls load_data.py and split_by_pid.py to load, batch, and split
 
 ## Transformer Results
 
-** in progress **
+note: early runs only had 1 target class results output, later results included both.
 
-**MORE Parameters to include? weight decay?
-**Do i want to update to include class 0 too? only evaluating on class 1 performance though
-
-***REDO for both 0 and 1 classes results GC will remove later****
 ## Run 1:
 
 Epochs: 5
